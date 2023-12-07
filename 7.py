@@ -1,12 +1,23 @@
 from enum import Enum
 
+# this solution is really bad, ngl. enum not needed, dict was better
+# class approach is okay but way overwill for this problem
 
-class Cards(Enum):
-    J = 1
+
+class Cards1(Enum):
     T = 10
+    J = 11
     Q = 12
     K = 13
     A = 14
+
+
+class Cards2(Enum):
+    J = 1
+    T = 11
+    Q = 13
+    K = 14
+    A = 15
 
 
 class HandType(Enum):
@@ -20,12 +31,16 @@ class HandType(Enum):
 
 
 class Hand:
-    def __init__(self, raw_hand: str, bid: str) -> None:
+    def __init__(self, raw_hand: str, bid: str, part: int) -> None:
+        if part == 1:
+            Card = Cards1
+        else:
+            Card = Cards2
         self.cards = [
-            int(letter) if letter.isdigit() else Cards[letter].value
+            int(letter) if letter.isdigit() else Card[letter].value
             for letter in raw_hand
         ]
-        self.detect_type()
+        self.detect_type(part)
         self.bid = int(bid)
 
     def __repr__(self) -> str:
@@ -34,25 +49,26 @@ class Hand:
     def __str__(self) -> str:
         return str(self.cards) + " - bid: " + str(self.bid)
 
-    def detect_type(self):
+    def detect_type(self, part: int):
         cards_count = [(card, self.cards.count(card)) for card in set(self.cards)]
-        Js = [0, 0]
-        high = [0, 0]
-        for card in cards_count:
-            if card[0] == 1:  # J found
-                Js = card
-            if card[1] > high[1] and card[0] != 1:
-                high = list(card)
-        if Js == (1, 5):
-            self.hand_type = HandType["FIVE_OF_A_KIND"].value
-            return
-        if Js != [0, 0]:
-            high[1] += Js[1]
-            cards_count.remove(Js)
+        if part == 2:
+            Js = [0, 0]
+            high = [0, 0]
             for card in cards_count:
-                if card[0] == high[0]:
-                    cards_count.remove(card)
-                    cards_count.append(list(high))
+                if card[0] == 1:  # J found
+                    Js = card
+                if card[1] > high[1] and card[0] != 1:
+                    high = list(card)
+            if Js == (1, 5):
+                self.hand_type = HandType["FIVE_OF_A_KIND"].value
+                return
+            if Js != [0, 0]:
+                high[1] += Js[1]
+                cards_count.remove(Js)
+                for card in cards_count:
+                    if card[0] == high[0]:
+                        cards_count.remove(card)
+                        cards_count.append(list(high))
         cards_count = [card_count[1] for card_count in cards_count]
         cards_count.sort()
         if cards_count == [5]:
@@ -85,7 +101,7 @@ class Hand:
 
 def p1(f):
     hands = [(line.split()[0], line.split()[1]) for line in f.read().splitlines()]
-    hands = [Hand(hand[0], hand[1]) for hand in hands]
+    hands = [Hand(hand[0], hand[1], 1) for hand in hands]
     ranked_cards = []
     for hand in hands:
         if not ranked_cards:
@@ -102,7 +118,21 @@ def p1(f):
 
 
 def p2(f):
-    pass
+    hands = [(line.split()[0], line.split()[1]) for line in f.read().splitlines()]
+    hands = [Hand(hand[0], hand[1], 2) for hand in hands]
+    ranked_cards = []
+    for hand in hands:
+        if not ranked_cards:
+            ranked_cards.append(hand)
+        else:
+            for ix, ranked in enumerate(ranked_cards):
+                if hand <= ranked:
+                    ranked_cards.insert(ix, hand)
+                    break
+            if hand not in ranked_cards:
+                ranked_cards.append(hand)
+    result = sum((ix + 1) * card.bid for ix, card in enumerate(ranked_cards))
+    return result
 
 
 if __name__ == "__main__":
