@@ -19,6 +19,6 @@ echo "    pass" >> "$DAY".py
 echo "" >> "$DAY".py
 echo "if __name__ == '__main__':" >> "$DAY".py
 echo "    with open('input$DAY.txt') as f:" >> "$DAY".py
-echo "        p1(f)" >> "$DAY".py
+echo "        print(p1(f))" >> "$DAY".py
 
 echo "Created $DAY.py and input$DAY.txt"
