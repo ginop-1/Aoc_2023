@@ -67,5 +67,5 @@ def p2(f):
 
 
 if __name__ == "__main__":
-    with open("input11.txt") as f:
+    with open("inputs/input11.txt") as f:
         print(p2(f))

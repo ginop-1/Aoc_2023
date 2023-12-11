@@ -27,6 +27,6 @@ def p2(f):
 
 
 if __name__ == "__main__":
-    with open("input4.txt", "r") as f:
+    with open("inputs/input4.txt", "r") as f:
         # print(p1(f))
         print(p2(f))

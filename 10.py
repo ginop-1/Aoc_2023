@@ -56,7 +56,7 @@ def p1(f, onlyPath=False):
     steps = 0
     seen = []
     if onlyPath and "path10.out" in os.listdir():
-        with open("path10.out") as f:
+        with open("inputs/path10.out") as f:
             return [Point(*map(int, line.split())) for line in f.read().splitlines()]
     while True:
         if current.x == start.x and current.y == start.y and steps != 0:
@@ -96,7 +96,7 @@ def p1(f, onlyPath=False):
                 assert False
         current = next
         steps += 1
-    with open("path10.out", "w") as f:
+    with open("inputs/path10.out", "w") as f:
         for point in seen:
             f.write(f"{point.x} {point.y}\n")
     if onlyPath:
@@ -120,5 +120,5 @@ def p2(f):
 
 
 if __name__ == "__main__":
-    with open("input10.txt") as f:
+    with open("inputs/input10.txt") as f:
         print(p2(f))
