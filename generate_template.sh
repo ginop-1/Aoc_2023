@@ -9,7 +9,7 @@ if [ -z "$DAY" ]; then
 fi
 
 touch "$DAY".py
-touch "input$DAY".txt
+touch "inputs/input$DAY".txt
 
 echo "def p1(f):" >> "$DAY".py
 echo "    pass" >> "$DAY".py
